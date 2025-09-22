@@ -235,3 +235,21 @@ resource "aws_autoscaling_policy" "scale_in_cpu" {
     }
     
 }
+
+resource "aws_cloudwatch_metric_alarm" "serversideerror" {
+    alarm_name          = "High-5xx-Error-Rate"
+    comparison_operator = "GreaterThanOrEqualToThreshold"
+    evaluation_periods  = 2
+    metric_name         = "HTTPCode_Target_5XX_Count"
+    namespace           = "AWS/ApplicationELB"
+    period              = 60
+    statistic           = "Sum"
+    threshold           = 10
+    alarm_description   = "This metric monitors high 5xx error rates"
+    dimensions = {
+        LoadBalancer = aws_lb.case1-lb.dns_name
+    }
+    alarm_actions = [aws_autoscaling_policy.scale_out_cpu.arn]
+    ok_actions    = [aws_autoscaling_policy.scale_in_cpu.arn]
+  
+}
