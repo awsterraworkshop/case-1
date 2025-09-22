@@ -119,6 +119,9 @@ resource "aws_launch_template" "case1-ec2-temp" {
     image_id      = data.aws_ami.amzonami.id
     instance_type = "t3.micro"
     key_name = "awsdev"
+    monitoring {
+        enabled = true
+    }
 
     tag_specifications {
         resource_type = "instance"
@@ -134,9 +137,9 @@ resource "aws_launch_template" "case1-ec2-temp" {
 }
 
 resource "aws_autoscaling_group" "case1-asg" {
-    desired_capacity     = 2
+    desired_capacity     = 1
     max_size             = 6
-    min_size             = 2
+    min_size             = 1
     vpc_zone_identifier  = aws_subnet.case1-subnet[*].id
     launch_template {
         id      = aws_launch_template.case1-ec2-temp.id
