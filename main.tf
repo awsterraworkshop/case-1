@@ -98,6 +98,12 @@ resource "aws_security_group" "case1-sg-ec2" {
         security_groups = [aws_security_group.case1-sg-lb.id]
     }
     ingress {
+        from_port       = 80
+        to_port         = 80
+        protocol        = "tcp"
+        cidr_blocks = [ "0.0.0.0/0" ]
+    }
+    ingress {
         from_port       = 22
         to_port         = 22
         protocol        = "tcp"
@@ -131,6 +137,10 @@ resource "aws_launch_template" "case1-ec2-temp" {
     }
     vpc_security_group_ids = [aws_security_group.case1-sg-ec2.id]
     user_data = base64encode(file("user_data.sh"))
+
+    lifecycle {
+        create_before_destroy = true
+    }
     
 
   

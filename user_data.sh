@@ -12,8 +12,8 @@ cat >/usr/share/nginx/html/index.html <<'HTML'
 <!doctype html>
 <html>
   <head><title>Scalable WebApp</title></head>
-  <body style="font-family: sans-serif;">
-    <h1>Hello from Auto Scaling EC2!</h1>
+  <body style="font-family: sans-serif;" background="#f0f0f0">
+    <h1>Hello from Auto Scaling EC2! - V2 here</h1>
     <p>Served by: __HOSTNAME__</p>
   </body>
 </html>
