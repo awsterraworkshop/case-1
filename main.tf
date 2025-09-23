@@ -223,46 +223,34 @@ resource "aws_autoscaling_policy" "scale_out_cpu" {
     
 }
 
-resource "aws_autoscaling_policy" "scale_in_cpu" {
-    name = "cpuscalein"
-    autoscaling_group_name = aws_autoscaling_group.case1-asg.name
-    policy_type = "TargetTrackingScaling"
-    target_tracking_configuration {
-        predefined_metric_specification {
-            predefined_metric_type = "ASGAverageCPUUtilization"
-        }
-        target_value = 30.0
-    }
-    
-}
 
-resource "aws_cloudwatch_metric_alarm" "serversideerror" {
-    alarm_name          = "High-5xx-Error-Rate"
-    comparison_operator = "GreaterThanOrEqualToThreshold"
-    evaluation_periods  = 2
-    metric_name         = "HTTPCode_Target_5XX_Count"
-    namespace           = "AWS/ApplicationELB"
-    period              = 60
-    statistic           = "Sum"
-    threshold           = 10
-    alarm_description   = "This metric monitors high 5xx error rates"
-    dimensions = {
-        LoadBalancer = aws_lb.case1-lb.dns_name
-    }
-    alarm_actions = [aws_autoscaling_policy.scale_out_cpu.arn]
-    ok_actions    = [aws_autoscaling_policy.scale_in_cpu.arn]
+# resource "aws_cloudwatch_metric_alarm" "serversideerror" {
+#     alarm_name          = "High-5xx-Error-Rate"
+#     comparison_operator = "GreaterThanOrEqualToThreshold"
+#     evaluation_periods  = 2
+#     metric_name         = "HTTPCode_Target_5XX_Count"
+#     namespace           = "AWS/ApplicationELB"
+#     period              = 60
+#     statistic           = "Sum"
+#     threshold           = 10
+#     alarm_description   = "This metric monitors high 5xx error rates"
+#     dimensions = {
+#         LoadBalancer = aws_lb.case1-lb.dns_name
+#     }
+#     alarm_actions = [aws_autoscaling_policy.scale_out_cpu.arn]
+#     ok_actions    = [aws_autoscaling_policy.scale_in_cpu.arn]
   
-}
+# }
 
-resource "aws_route53_record" "r53" {
-    zone_id = "Z02006811XA543NMXJYU3"
-    name    = "mywebsite"
-    type    = "A"
+# resource "aws_route53_record" "r53" {
+#     zone_id = "Z02006811XA543NMXJYU3"
+#     name    = "mywebsite"
+#     type    = "A"
     
-    alias {
-        name                   = aws_lb.case1-lb.dns_name
-        zone_id                = aws_lb.case1-lb.zone_id
-        evaluate_target_health = true
-    }
+#     alias {
+#         name                   = aws_lb.case1-lb.dns_name
+#         zone_id                = aws_lb.case1-lb.zone_id
+#         evaluate_target_health = true
+#     }
   
-}
+# }
