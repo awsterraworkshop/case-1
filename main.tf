@@ -141,15 +141,33 @@ resource "aws_launch_template" "case1-ec2-temp" {
     lifecycle {
         create_before_destroy = true
     }
+    block_device_mappings {
+        device_name = "/dev/xvda"
+
+        ebs {
+            volume_size = 30
+            volume_type = "gp3"
+            delete_on_termination = true 
+        }
+    }
+    block_device_mappings {
+        device_name = "/dev/xvdb"
+
+        ebs {
+            volume_size = 50
+            volume_type = "gp3"
+            delete_on_termination = false 
+        }
+    }
     
 
   
 }
 
 resource "aws_autoscaling_group" "case1-asg" {
-    desired_capacity     = 1
+    desired_capacity     = 2
     max_size             = 6
-    min_size             = 1
+    min_size             = 2
     vpc_zone_identifier  = aws_subnet.case1-subnet[*].id
     launch_template {
         id      = aws_launch_template.case1-ec2-temp.id
@@ -222,6 +240,8 @@ resource "aws_autoscaling_policy" "scale_out_cpu" {
     }
     
 }
+
+
 
 
 # resource "aws_cloudwatch_metric_alarm" "serversideerror" {
